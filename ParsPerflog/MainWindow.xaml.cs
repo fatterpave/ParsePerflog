@@ -27,6 +27,7 @@ namespace ParsPerflog
     public partial class MainWindow : Window
     {
         public delegate void AddStatusTextCallback(string message);
+        public delegate void AddToComboCallback();
         private Dictionary<string,List<GaugePoint>> gaugePoints = new Dictionary<string,List<GaugePoint>>();
         private Thread uiThread;
         private string outputFilePath = @"C:\temp\trgfuckup\";
@@ -60,6 +61,14 @@ namespace ParsPerflog
             );
         }
 
+        private void AddToCombo()
+        {
+            statusText.Dispatcher.Invoke(
+                new AddToComboCallback(this.PopulateCombo),
+                new object[] { null }
+            );
+        }
+
         private void LoadObjectEngine()
         {
             Stopwatch watch = new Stopwatch();
@@ -68,7 +77,7 @@ namespace ParsPerflog
             gaugePoints = Util.Deserialize<Dictionary<string, List<GaugePoint>>>(File.Open(outputFilePath + savedObject, FileMode.Open));
             watch.Stop();
             AddText("Loaded object in " + watch.Elapsed);
-            PopulateCombo();
+            AddToCombo();
         }
 
         private void PopulateCombo()
