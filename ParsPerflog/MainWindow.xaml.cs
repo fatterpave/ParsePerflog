@@ -86,7 +86,7 @@ namespace ParsPerflog
                 string name = split[split.Length - 1];
                 foreach (GaugePoint g in points)
                 {
-                    File.AppendAllText(outputFilePath+name, g.time.ToString("HH:mm:ss.fff") + "," + g.Duration + Environment.NewLine);
+                    File.AppendAllText(outputFilePath+name+".csv", g.time.ToString("HH:mm:ss.fff") + "," + g.Duration + Environment.NewLine);
                 }
             }
         }
