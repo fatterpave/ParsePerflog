@@ -5,15 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ParsPerflog"
         mc:Ignorable="d"
-        Title="MainWindow" Height="200.103" Width="577.766">
-    <Grid Margin="0,0,21,20">
-        <Button Content="Start" HorizontalAlignment="Left" Margin="23,27,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <RichTextBox x:Name="statusText" HorizontalAlignment="Left" Height="62" Margin="23,63,0,0" VerticalAlignment="Top" Width="502">
+        Title="ParsePerflog" Height="200.103" Width="578.766" ResizeMode="NoResize">
+    <Grid Margin="0,0,4,20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="52*"/>
+            <ColumnDefinition Width="523*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="startBtn" Content="Start" HorizontalAlignment="Left" Margin="23,27,0,0" VerticalAlignment="Top" Width="75" Click="StartButton_Click" Grid.ColumnSpan="2"/>
+        <RichTextBox x:Name="statusText" HorizontalAlignment="Left" Height="62" Margin="23,63,0,0" VerticalAlignment="Top" Width="526" Grid.ColumnSpan="2">
             <FlowDocument/>
         </RichTextBox>
-        <ProgressBar HorizontalAlignment="Left" Height="16" Margin="97,395,0,0" VerticalAlignment="Top" Width="449"/>
-        <ComboBox x:Name="methodCombo" HorizontalAlignment="Left" Margin="171,27,0,0" VerticalAlignment="Top" Width="262" SelectionChanged="methodCombo_SelectionChanged"/>
-        <Button x:Name="exportBtn" Content="Export" HorizontalAlignment="Left" Margin="450,27,0,0" VerticalAlignment="Top" Width="75" Click="exportBtn_Click"/>
+        <ProgressBar HorizontalAlignment="Left" Height="16" Margin="45,395,0,-260" VerticalAlignment="Top" Width="449" Grid.Column="1"/>
+        <ComboBox x:Name="methodCombo" HorizontalAlignment="Left" Margin="102,27,0,0" VerticalAlignment="Top" Width="262" SelectionChanged="methodCombo_SelectionChanged" Grid.Column="1"/>
+        <Button x:Name="exportBtn" Content="Export" HorizontalAlignment="Left" Margin="422,27,0,0" VerticalAlignment="Top" Width="75" Click="exportBtn_Click" Grid.Column="1"/>
+        <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Margin="23,149,0,-13" Width="526" Grid.ColumnSpan="2"/>
 
     </Grid>
 </Window>
