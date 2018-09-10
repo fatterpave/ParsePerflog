@@ -29,8 +29,10 @@ namespace ParsPerflog
         public delegate void AddStatusTextCallback(string message);
         private Dictionary<string,List<GaugePoint>> gaugePoints = new Dictionary<string,List<GaugePoint>>();
         private Thread uiThread;
-        private string outputFilePath = @"c:\temp\";
-        private string savedObject = @"c:\temp\data.bin";
+        private string outputFilePath = @"C:\temp\trgfuckup\";
+        private string savedObject = "data.bin";
+        private string perflog = "perflog.log";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,14 +40,16 @@ namespace ParsPerflog
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(savedObject))
+            if (File.Exists(outputFilePath+savedObject))
             {
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
                 AddText("Reading object...");
-                gaugePoints = Util.Deserialize<Dictionary<string, List<GaugePoint>>>(File.Open(savedObject, FileMode.Open));
+                Thread.Sleep(499);
+                statusText.UpdateLayout();
+                gaugePoints = Util.Deserialize<Dictionary<string, List<GaugePoint>>>(File.Open(outputFilePath+savedObject, FileMode.Open));
                 watch.Stop();
-                AddText("Loaded object in "+watch.Elapsed.ToString("mm:ss"));
+                AddText("Loaded object in "+watch.Elapsed);
                 PopulateCombo();
             }
             else
@@ -88,11 +92,9 @@ namespace ParsPerflog
         }
 
         private void ParseEngine()
-        {
-
-            
+        {   
             AddText("Starting...\n");
-            var lines = File.ReadAllLines(@"C:\temp\perflog.log");
+            var lines = File.ReadAllLines(outputFilePath+perflog);
 
             AddText("Done.\n");
             int counter = 0;
@@ -148,7 +150,8 @@ namespace ParsPerflog
 
         private void exportBtn_Click(object sender, RoutedEventArgs e)
         {
-            Export();
+            uiThread = new Thread(Export);
+            uiThread.Start();
         }
 
         private void methodCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
