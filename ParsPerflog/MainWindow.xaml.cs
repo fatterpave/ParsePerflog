@@ -42,15 +42,8 @@ namespace ParsPerflog
         {
             if (File.Exists(outputFilePath+savedObject))
             {
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
-                AddText("Reading object...");
-                Thread.Sleep(499);
-                statusText.UpdateLayout();
-                gaugePoints = Util.Deserialize<Dictionary<string, List<GaugePoint>>>(File.Open(outputFilePath+savedObject, FileMode.Open));
-                watch.Stop();
-                AddText("Loaded object in "+watch.Elapsed);
-                PopulateCombo();
+                uiThread = new Thread(LoadObjectEngine);
+                uiThread.Start();
             }
             else
             {
@@ -65,6 +58,17 @@ namespace ParsPerflog
                 new AddStatusTextCallback(this.AddStatusText),
                 new object[] { text }
             );
+        }
+
+        private void LoadObjectEngine()
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            AddText("Reading object...");
+            gaugePoints = Util.Deserialize<Dictionary<string, List<GaugePoint>>>(File.Open(outputFilePath + savedObject, FileMode.Open));
+            watch.Stop();
+            AddText("Loaded object in " + watch.Elapsed);
+            PopulateCombo();
         }
 
         private void PopulateCombo()
