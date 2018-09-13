@@ -17,6 +17,7 @@ using System.Windows.Threading;
 using System.IO;
 using System.Diagnostics;
 using System.ComponentModel;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ParsPerflog
 {
@@ -59,7 +60,16 @@ namespace ParsPerflog
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
                 AddStatusText("Reading object...\n");
-                gaugePoints = Util.Deserialize<Dictionary<string, List<GaugePoint>>>(File.Open(outputFilePath + savedObject, FileMode.Open));
+
+                using (ReadProgressStream rps = new ReadProgressStream(File.Open(outputFilePath + savedObject, FileMode.Open)))
+                using (BufferedStream bs = new BufferedStream(rps))
+                {
+                    rps.ProgressChanged += Rps_ProgressChanged; 
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    gaugePoints = (Dictionary<string, List<GaugePoint>>)formatter.Deserialize(bs);
+                }
+
+                //gaugePoints = Util.Deserialize<Dictionary<string, List<GaugePoint>>>(File.Open(outputFilePath + savedObject, FileMode.Open));
                 watch.Stop();
                 AddStatusText("Loaded object in " + watch.Elapsed+Environment.NewLine);
                 
@@ -87,6 +97,15 @@ namespace ParsPerflog
         private void AddStatusText(string text)
         {
             AddStatusText(text, false);
+        }
+
+        private void Rps_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            this.Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate ()
+            {
+                this.statusText.Document.Blocks.Clear();
+                this.statusText.AppendText("Read progress: "+e.ProgressPercentage+"%");
+            }));
         }
 
         private void AddStatusText(string text,bool clear)
