@@ -61,9 +61,17 @@ namespace ParsPerflog
                 watch.Start();
                 AddStatusText("Reading object...\n");
 
+                this.Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate ()
+                    {
+                        this.progressBar.IsIndeterminate = false;
+                        this.progressBar.Maximum = 100;
+                        this.progressBar.Minimum = 0;
+                    }));
+
                 using (ReadProgressStream rps = new ReadProgressStream(File.Open(outputFilePath + savedObject, FileMode.Open)))
                 using (BufferedStream bs = new BufferedStream(rps))
                 {
+                    rps.Seek(0, SeekOrigin.Begin);
                     rps.ProgressChanged += Rps_ProgressChanged; 
                     BinaryFormatter formatter = new BinaryFormatter();
                     gaugePoints = (Dictionary<string, List<GaugePoint>>)formatter.Deserialize(bs);
@@ -105,6 +113,7 @@ namespace ParsPerflog
             {
                 this.statusText.Document.Blocks.Clear();
                 this.statusText.AppendText("Read progress: "+e.ProgressPercentage+"%");
+                this.progressBar.Value = e.ProgressPercentage;
             }));
         }
 
