@@ -20,20 +20,14 @@ using System.ComponentModel;
 
 namespace ParsPerflog
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    /// 
-    
-
 
     public partial class MainWindow : Window
     {
         private Dictionary<string,List<GaugePoint>> gaugePoints = new Dictionary<string,List<GaugePoint>>();
         private Thread uiThread;
-        private string outputFilePath = @"C:\temp\";
+        private string outputFilePath = @"C:\temp\fndfuckup\";
         private string savedObject = "data.bin";
-        private string perflog = "perflog_small.log";
+        private string perflog = "perflog.log";
 
         public MainWindow()
         {
@@ -119,7 +113,7 @@ namespace ParsPerflog
 
                     foreach (var line in lines)
                     {
-                        if (line.Contains("Camel"))
+                        if (line.Contains("FC_OTHER_05_TransactionList"))
                         {
                             string[] split = line.Split(null);
                             int seconds = Convert.ToInt32(split[split.Length - 2]);

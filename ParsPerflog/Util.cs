@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Windows;
 
 namespace ParsPerflog
 {
@@ -37,11 +38,13 @@ namespace ParsPerflog
                     // create BinaryFormatter
                     BinaryFormatter bin = new BinaryFormatter();
                     // deserialize the collection (Employee) from file (stream)
+                    stream.Seek(0, SeekOrigin.Begin);
                     ret = (Object)bin.Deserialize(stream);
                 }
             }
-            catch (IOException)
+            catch (IOException ioe)
             {
+                MessageBox.Show(ioe.ToString());
             }
             return ret;
         }
